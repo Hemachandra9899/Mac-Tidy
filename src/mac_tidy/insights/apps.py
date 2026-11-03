@@ -63,8 +63,10 @@ class _Matcher:
 
     def __init__(self, apps):
         self.apps = apps
-        self.names = {info["name"].lower(): bundle_id for bundle_id, info in apps.items()
-                      if len(info["name"]) >= MIN_VENDOR_LENGTH}
+        self.names = {}
+        for bundle_id, info in apps.items():
+            if len(info["name"]) >= MIN_VENDOR_LENGTH:
+                self.names.setdefault(info["name"].lower(), []).append(bundle_id)
         self.vendors = {}
         for bundle_id in apps:
             vendor = _vendor(bundle_id)
@@ -78,16 +80,26 @@ class _Matcher:
         key = TEAM_PREFIX.sub("", folder_name.removesuffix(".savedState"))
         if key in self.apps:
             return key, []
-        for bundle_id in self.apps:
-            if key.startswith(bundle_id + "."):
-                return bundle_id, []
+        identifiers = [bundle_id for bundle_id in self.apps if key.startswith(bundle_id + ".")]
+        if identifiers:
+            return max(identifiers, key=len), []
         lower = key.lower()
-        for name, bundle_id in self.names.items():
-            if lower == name or (lower.startswith(name) and lower[len(name)] in NAME_SEPARATORS):
-                return bundle_id, []
-        vendor = _vendor(key) or lower
-        candidates = next((ids for prefix, ids in self.vendors.items() if vendor == prefix), [])
+        names = [name for name in self.names if lower == name or (lower.startswith(name) and lower[len(name)] in NAME_SEPARATORS)]
+        if names:
+            candidates = self.names[max(names, key=len)]
+            return (candidates[0], []) if len(candidates) == 1 else (None, candidates)
+        candidates = self._vendor_candidates(key)
         return (candidates[0], []) if len(candidates) == 1 else (None, candidates)
+
+    def _vendor_candidates(self, key):
+        """Apps by the same vendor as a folder. A reverse-DNS folder
+        ('com.brave.Browser.x') must name the vendor exactly; a plain folder
+        ('BraveSoftware') only has to begin with it."""
+        vendor = _vendor(key)
+        if vendor:
+            return self.vendors.get(vendor, [])
+        lower = key.lower()
+        return [bundle_id for prefix, ids in self.vendors.items() if lower.startswith(prefix) for bundle_id in ids]
 
 
 def app_breakdown(report, apps):

@@ -52,3 +52,7 @@ export const coverageNote = () => notice(
    ${linkTo('View Scan Details…', 'coverage')}`,
   { info: true },
 );
+
+/** A numbered list of ``[title, textHtml]`` steps. */
+export const numberedSteps = (steps) => steps.map(([title, textHtml], i) => `
+  <div class="step"><span class="stepnum">${i + 1}</span><div><b>${title}</b><p>${textHtml}</p></div></div>`).join('');

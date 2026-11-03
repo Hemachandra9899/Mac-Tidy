@@ -1,6 +1,6 @@
 import { folderRows } from '../components/folder-row.js';
 import { freeSpaceMetric, metric, metricRow, trashMetric } from '../components/metrics.js';
-import { actionButton, card, chartColor, coverageNote, empty, linkTo } from '../components/primitives.js';
+import { actionButton, card, chartColor, coverageNote, empty, linkTo, numberedSteps } from '../components/primitives.js';
 import { esc, formatSize, formatTime, sortBySize, sumSizes } from '../core/format.js';
 import { friendlyName, managedAppData, shortPath } from '../core/selectors.js';
 import { state } from '../core/state.js';
@@ -61,8 +61,7 @@ const hero = (largest) => !largest ? '' : `
 const stepsCard = () => card({
   title: 'Review Before Removing',
   subtitle: 'One location. One clear decision.',
-  bodyHtml: STEPS.map(([title, text], i) =>
-    `<div class="step"><span class="stepnum">${i + 1}</span><div><b>${title}</b><p>${text}</p></div></div>`).join(''),
+  bodyHtml: numberedSteps(STEPS),
 });
 
 export function overviewView() {

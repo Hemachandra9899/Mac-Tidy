@@ -8,6 +8,9 @@ import { reviewCleanupView } from '../views/review-cleanup.js';
 
 export const $ = (selector) => document.querySelector(selector);
 
+// Views redrawn whole when a filter changes, because their results sit beside other content.
+const INSIGHT_VIEWS = ['apps', 'developer', 'older', 'duplicates'];
+
 export function render() {
   if (!state.report) return;
   const view = VIEWS[state.view];
@@ -21,19 +24,25 @@ export function render() {
   $('#content').innerHTML = view.render();
 }
 
-/** Re-render only the results, so the search field keeps focus. */
-export function renderResults() {
-  if(['apps','developer','older','duplicates'].includes(state.view)){
-    const input=$('#search'),focused=input===document.activeElement,caret=input?.selectionStart??0;
-    $('#content').innerHTML=VIEWS[state.view].render();
-    if(focused&&$('#search')){$('#search').focus();$('#search').setSelectionRange(caret,caret);}
-    return;
+/** Replace the page content, keeping focus and caret in the search field. */
+function replaceContent(html, { alwaysFocus = false } = {}) {
+  const input = $('#search');
+  const refocus = alwaysFocus || input === document.activeElement;
+  const caret = input?.selectionStart ?? 0;
+  $('#content').innerHTML = html;
+  const search = $('#search');
+  if (refocus && search) {
+    search.focus();
+    search.setSelectionRange(caret, caret);
   }
-  if (state.view === 'approvals') {
-    const caret = $('#search')?.selectionStart ?? 0;
-    $('#content').innerHTML = reviewCleanupView();
-    $('#search').focus();
-    $('#search').setSelectionRange(caret, caret);
+}
+
+/** Re-render only what a search or filter changed. */
+export function renderResults() {
+  if (INSIGHT_VIEWS.includes(state.view)) {
+    replaceContent(VIEWS[state.view].render());
+  } else if (state.view === 'approvals') {
+    replaceContent(reviewCleanupView(), { alwaysFocus: true });
   } else if (isItemList(state.view)) {
     $('#results').innerHTML = listResults(state.view);
   }

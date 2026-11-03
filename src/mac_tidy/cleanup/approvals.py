@@ -9,7 +9,7 @@ from ..rules import action_policy
 from .fingerprint import fingerprint
 
 APPROVAL_TTL_SECONDS = 300
-PRIVATE_PLAN_FIELDS = ("fingerprint", "revision")
+PRIVATE_PLAN_FIELDS = ("fingerprint", "revision", "keep")
 
 
 class TrashManager:
@@ -41,8 +41,27 @@ class TrashManager:
             raise ValueError("Approval expired or already used. Review the item again.")
         return plan
 
-    def preview(self, row, item_type, revision):
-        """Validate an item and issue an approval key. Moves nothing."""
+    def _check_keeper(self, key):
+        """For an approval that depends on another copy staying put (a duplicate),
+        confirm that copy is unchanged. Does not use up the approval."""
+        with self._lock:
+            plan = self.pending.get(key)
+        keep = plan and plan.get("keep")
+        if not keep:
+            return
+        try:
+            current = fingerprint(keep["path"])
+        except OSError:
+            raise ValueError("The copy to keep is missing. Nothing was moved.") from None
+        if current != keep["fingerprint"]:
+            raise ValueError("The copy to keep changed. Run duplicate search again.")
+
+    def preview(self, row, item_type, revision, keep=None):
+        """Validate an item and issue an approval key. Moves nothing.
+
+        ``keep`` is ``{'path', 'fingerprint'}`` of a copy that must still be
+        unchanged when the move is approved. It expires with the approval.
+        """
         policy = self._check_policy(row, item_type)
         key = secrets.token_urlsafe(32)
         plan = {
@@ -55,6 +74,7 @@ class TrashManager:
             "expires": time.time() + APPROVAL_TTL_SECONDS,
             "fingerprint": fingerprint(row["path"]),
             "revision": revision,
+            "keep": keep,
         }
         with self._lock:
             now = time.time()
@@ -65,6 +85,7 @@ class TrashManager:
     def execute(self, key, revision):
         """Move an approved item to Trash after re-checking everything."""
         with self._move_lock:
+            self._check_keeper(key)
             plan = self._take(key)
             if revision != plan["revision"]:
                 raise ValueError("The scan changed. Review the item again.")

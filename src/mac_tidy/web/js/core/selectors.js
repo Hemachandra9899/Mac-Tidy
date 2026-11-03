@@ -59,10 +59,13 @@ export function friendlyName(d) {
 
 // Filtering
 
-export function matchesSearch(d) {
+/** True when the search box is empty or any of the values contains its text. */
+export function matchesText(...values) {
   const query = state.query.toLowerCase();
-  return !query || d.path.toLowerCase().includes(query);
+  return !query || values.some((value) => String(value ?? '').toLowerCase().includes(query));
 }
+
+export const matchesSearch = (d) => matchesText(d.path);
 
 export const matchesFilter = (d) => state.filter === 'all' || d.kind === state.filter;
 

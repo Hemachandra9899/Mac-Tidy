@@ -11,8 +11,8 @@ import os
 import shutil
 import time
 
+from ..common.paths import local_regular, personal_path
 from ..config import HOME
-from ..common.paths import personal_path, local_regular
 
 ROOTS = [HOME, "/Users/Shared", "/Applications", "/Library", "/private/var", "/opt", "/usr/local"]
 MAX_LARGEST_FILES = 1500
@@ -28,6 +28,14 @@ SNAPSHOT_NOTE = (
 
 def data_volume():
     return "/System/Volumes/Data" if os.path.exists("/System/Volumes/Data") else "/"
+
+
+def _keep_largest(heap, limit, item):
+    """Keep only the ``limit`` items with the largest first element, in a min-heap."""
+    if len(heap) < limit:
+        heapq.heappush(heap, item)
+    elif item[0] > heap[0][0]:
+        heapq.heapreplace(heap, item)
 
 
 class _Scan:
@@ -65,18 +73,13 @@ class _Scan:
             "logical": st.st_size,
             "mtime": st.st_mtime,
             "mtimeNs": st.st_mtime_ns,
-            "device": st.st_dev, "inode": st.st_ino,
+            "device": st.st_dev,
+            "inode": st.st_ino,
         }
         if size >= MIN_REVIEW_BYTES and personal_path(entry.path, HOME) and local_regular(st):
             self.review_count += 1
-            review = (size, self.file_count, dict(row))
-            if len(self.review_files) < MAX_REVIEW_FILES:heapq.heappush(self.review_files, review)
-            elif size > self.review_files[0][0]:heapq.heapreplace(self.review_files, review)
-        item = (size, self.file_count, row)
-        if len(self.files) < MAX_LARGEST_FILES:
-            heapq.heappush(self.files, item)
-        elif size > self.files[0][0]:
-            heapq.heapreplace(self.files, item)
+            _keep_largest(self.review_files, MAX_REVIEW_FILES, (size, self.file_count, dict(row)))
+        _keep_largest(self.files, MAX_LARGEST_FILES, (size, self.file_count, row))
         return size
 
     def open_dir(self, path, parent, device):

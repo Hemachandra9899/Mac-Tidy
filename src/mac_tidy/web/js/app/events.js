@@ -34,18 +34,23 @@ function onInput(event) {
   renderResults();
 }
 
+// Handlers for form controls, keyed by element id.
+const CHANGE_HANDLERS = {
+  'approve-check': (el) => { $('#approve-trash').disabled = !el.checked; },
+  filter: (el) => { state.filter = el.value; state.page = 0; renderResults(); },
+  'old-days': (el) => { state.oldDays = Number(el.value); renderResults(); },
+  'stale-only': (el) => { state.staleOnly = el.checked; renderResults(); },
+  'duplicate-mode': (el) => { state.duplicateMode = el.value; },
+  'duplicate-budget': (el) => { state.duplicateBudget = Number(el.value); },
+};
+
 function onChange(event) {
-  if (event.target.id === 'old-days') { state.oldDays=Number(event.target.value);renderResults();
-  } else if(event.target.id==='stale-only'){state.staleOnly=event.target.checked;renderResults();
-  } else if(event.target.id==='duplicate-mode'){state.duplicateMode=event.target.value;
-  } else if(event.target.id==='duplicate-budget'){state.duplicateBudget=Number(event.target.value);
-  } else if(event.target.dataset.keeperGroup){state.duplicateKeepers[event.target.dataset.keeperGroup]=Number(event.target.value);renderResults();
-  } else if (event.target.id === 'approve-check') {
-    $('#approve-trash').disabled = !event.target.checked;
-  } else if (event.target.id === 'filter') {
-    state.filter = event.target.value;
-    state.page = 0;
+  const element = event.target;
+  if (element.dataset.keeperGroup) {
+    state.duplicateKeepers[element.dataset.keeperGroup] = Number(element.value);
     renderResults();
+  } else {
+    CHANGE_HANDLERS[element.id]?.(element);
   }
 }
 

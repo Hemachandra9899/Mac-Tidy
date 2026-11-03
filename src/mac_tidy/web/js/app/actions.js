@@ -48,20 +48,35 @@ function exportReport() {
   setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }
 
+async function findDuplicates() {
+  await api.post('/api/duplicates/find', { mode: state.duplicateMode, budgetBytes: state.duplicateBudget });
+  await refreshInsights();
+  render();
+  poll();
+}
+
+async function cancelDuplicates() {
+  await api.post('/api/duplicates/cancel', {});
+  await refreshInsights();
+  render();
+}
+
+/** ``arg`` is JSON: ``{group, id, keeper}`` for the copy to remove and the copy to keep. */
+async function reviewDuplicate(arg) {
+  const selection = JSON.parse(arg);
+  const group = state.duplicates.groups.find((g) => g.id === selection.group);
+  const file = group?.files.find((f) => f.index === selection.id);
+  if (!file) throw new Error('Duplicate group changed. Search again.');
+  const selected = itemFor(`${file.type || 'file'}:${file.index}`);
+  state.selected = selected;
+  state.approval = await api.post('/api/duplicates/preview', selection);
+  showTrashReview(selected, state.approval);
+}
+
 export const ACTIONS = {
-  'find-duplicates': async () => {
-    await api.post('/api/duplicates/find',{mode:state.duplicateMode,budgetBytes:state.duplicateBudget});
-    await refreshInsights();render();poll();
-  },
-  'cancel-duplicates': async () => { await api.post('/api/duplicates/cancel',{});await refreshInsights();render(); },
-  'review-duplicate': async (arg) => {
-    const selection=JSON.parse(arg),result=state.duplicates;
-    const group=result.groups.find(g=>g.id===selection.group),file=group?.files.find(f=>f.index===selection.id);
-    if(!file)throw Error('Duplicate group changed. Search again.');
-    const selected=itemFor(`${file.type||'file'}:${file.index}`);state.selected=selected;
-    state.approval=await api.post('/api/duplicates/preview',selection);
-    showTrashReview(selected,state.approval);
-  },
+  'find-duplicates': findDuplicates,
+  'cancel-duplicates': cancelDuplicates,
+  'review-duplicate': reviewDuplicate,
   go,
   'open-folder': (id) => { state.folder = id === 'root' ? null : Number(id); render(); },
   explore: (id) => { state.folder = Number(id); closeDialog(); go('explorer'); },
