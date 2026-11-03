@@ -192,23 +192,6 @@ Dependencies point one way: `rules` ← `scan`, `cleanup` ← `server` ← `cli`
 
 <br>
 
-## <img src="https://api.iconify.design/lucide/map.svg?color=%23299B50" width="20" height="20">&nbsp; Roadmap
-- [x] **Scan:** metadata-only, no symlinks, hard links counted once, partial coverage flagged
-- [x] **Explain:** every location classified with plain-language advice
-- [x] **Review-first Trash:** preview, confirmation, single-use expiring approval
-- [x] **Identity check:** fingerprint verified by the server and again by the native helper
-- [x] **Recovery:** activity log with live "still in Trash" status and Show in Trash
-- [x] **Package protection:** nothing inside an app or library bundle can be moved
-- [x] **Light and dark appearance**, responsive layout
-- [x] **Screenshots** in this README
-- [ ] **Signed and notarised release** so it can be double-clicked without building
-- [x] **Exact duplicate files and inspect-only folder comparison**
-- [x] **Per-app, developer and older-file insights; real scan trends**
-- [ ] **Scheduled rescans** with a quiet notification when a cache grows large
-
-These last items are ideas, not commitments.
-
-<br>
 
 ## <img src="https://api.iconify.design/lucide/heart-handshake.svg?color=%23299B50" width="20" height="20">&nbsp; Acknowledgements
 - [Apple SF Symbols](https://developer.apple.com/sf-symbols/): the interface icons
