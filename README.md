@@ -190,10 +190,14 @@ native/
   MacTidyHelper.swift   reveal in Finder, move to Trash (re-verifies identity)
 ```
 
-Dependencies point one way: `rules` ← `scan`, `cleanup` ← `server` ← `cli`; and on the frontend `core` ← `components` ← `views` ← `app`. See [CONTRIBUTING.md](CONTRIBUTING.md) to get involved.
+Dependencies point one way: `rules` ← `scan`, `cleanup` ← `server` ← `cli`; and on the frontend `core` ← `components` ← `views` ← `app`.
 
 <br>
 
+
+## <img src="https://api.iconify.design/lucide/git-pull-request.svg?color=%23299B50" width="20" height="20">&nbsp; Contributing
+
+Issues are welcome: bug reports, ideas, and anything that looks unsafe. Pull requests are fine too, with one rule: **any change to what can be moved to Trash must be stricter than before or equally strict, never looser.** Please explain the reasoning in the pull request. To report a security problem privately, see [SECURITY.md](SECURITY.md).
 
 ## <img src="https://api.iconify.design/lucide/heart-handshake.svg?color=%23299B50" width="20" height="20">&nbsp; Acknowledgements
 - [Apple SF Symbols](https://developer.apple.com/sf-symbols/): the interface icons
