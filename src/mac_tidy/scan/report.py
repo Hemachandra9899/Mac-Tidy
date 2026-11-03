@@ -33,13 +33,13 @@ def prepare_report(result):
     Kept: folders of at least 1 MB, roots, partially scanned folders, parents
     of indexed files, and their ancestors. Safe to run on a prepared report.
     """
-    keep = _kept_ids(result["dirs"], {f["parent"] for f in result["files"]})
+    keep = _kept_ids(result["dirs"], {f["parent"] for f in result["files"] + result.get("reviewFiles", [])})
     retained = [d for d in result["dirs"] if d["id"] in keep]
     new_id = {d["id"]: i for i, d in enumerate(retained)}
     for d in retained:
         d["id"] = new_id[d["id"]]
         d["parent"] = new_id.get(d["parent"])
-    for f in result["files"]:
+    for f in result["files"] + result.get("reviewFiles", []):
         f["parent"] = new_id[f["parent"]]
 
     root_paths = {d["path"] for d in result["roots"]}
@@ -47,6 +47,7 @@ def prepare_report(result):
     result["roots"] = [d for d in retained if d["path"] in root_paths]
     _annotate(retained, "dir")
     _annotate(result["files"], "file")
+    _annotate(result.get("reviewFiles", []), "file")
     return result
 
 

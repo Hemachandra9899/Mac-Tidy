@@ -36,13 +36,13 @@ Freeing space on a Mac is oddly risky. The usual tools each get one part wrong.
     <td width="33%" valign="top" align="center">
       <br>
       <h3 align="center"><img src="https://api.iconify.design/lucide/bomb.svg?color=%23299B50" width="18" height="18">&nbsp; One-click cleaners</h3>
-      <p align="center">"Clean everything" buttons delete in bulk and permanently. A wrong guess costs you real data.</p>
+      <p align="center">Bulk removal can hide consequences. A wrong selection can cost you real data; each Mac Tidy move gets an explicit review.</p>
       <br>
     </td>
     <td width="33%" valign="top" align="center">
       <br>
       <h3 align="center"><img src="https://api.iconify.design/lucide/cloud-upload.svg?color=%23299B50" width="18" height="18">&nbsp; Your data leaves</h3>
-      <p align="center">Many cleaners are closed-source, want broad permissions, and phone home with a list of your files.</p>
+      <p align="center">You should be able to inspect a storage tool and know whether it reads file contents or sends data away. Mac Tidy performs its analysis locally.</p>
       <br>
     </td>
   </tr>
@@ -55,7 +55,7 @@ Mac Tidy treats cleanup as a **review problem**, not a deletion problem. It meas
 
 - **Local only.** A small server on `127.0.0.1` serves the dashboard. No accounts, no telemetry, no third-party packages.
 - **Review first.** Every move needs a preview, a checkbox and a single-use approval that expires after five minutes.
-- **Allowlist, not blocklist.** Only recognised caches, logs and your own Downloads/Documents/Desktop files can be offered. Everything else is refused.
+- **Allowlist, not blocklist.** Only recognised caches, logs, supported regenerable developer folders and your own Downloads/Documents/Desktop files can be offered. Everything else is refused.
 
 ### How it works
 <p align="center">
@@ -68,7 +68,7 @@ Mac Tidy treats cleanup as a **review problem**, not a deletion problem. It meas
 4.  **Preview:** You pick an item. The server checks the allowlist again from the path alone, fingerprints the item (device, inode, modification time, size, no symlinks) and issues a random approval key. Nothing has moved yet.
 5.  **Approve:** You tick a confirmation that you've stopped the app or no longer need the file. The key is single-use and tied to this scan. The server re-checks the fingerprint.
 6.  **Move:** The Swift helper checks the fingerprint once more, then calls Apple's `FileManager.trashItem`. The move is written to an activity log so you can find it later.
-7.  **Recover or reclaim:** Use **Activity & Recovery** to show the item in Trash and Put Back, or empty Trash yourself and rescan to measure the space you freed. Mac Tidy never empties Trash.
+7.  **Recover or reclaim:** Use **Activity & Recovery** to show the item in Trash and Put Back, or empty Trash yourself and rescan to observe the change in available space. Mac Tidy never empties Trash.
 
 <br>
 
@@ -129,16 +129,25 @@ No runtime dependencies. The Python standard library, plain ES modules and CSS, 
 ### Requirements
 - macOS
 - Python 3.10+
-- Xcode Command Line Tools (`xcode-select --install`), used to compile the Swift helper
+- Xcode Command Line Tools (`xcode-select --install`), which includes `make` and the Swift compiler used to build the helper
 
 ### Run it
 
 ```bash
-git clone <this repo> mac-tidy && cd mac-tidy
+git clone https://github.com/Hemachandra9899/Mac-Tidy.git mac-tidy
+cd mac-tidy
 make run
 ```
 
 `make run` builds the helper on first use, starts the server and opens <http://127.0.0.1:8765>. Press Control-C to stop. You can also double-click **Start Mac Tidy.command**.
+
+If port 8765 is busy, choose another local port:
+
+```sh
+MAC_TIDY_PORT=8800 make run
+```
+
+Then open <http://127.0.0.1:8800>. Host, Origin and session checks use the chosen port too.
 
 ### Install as a command
 
@@ -191,9 +200,10 @@ Dependencies point one way: `rules` ← `scan`, `cleanup` ← `server` ← `cli`
 - [x] **Recovery:** activity log with live "still in Trash" status and Show in Trash
 - [x] **Package protection:** nothing inside an app or library bundle can be moved
 - [x] **Light and dark appearance**, responsive layout
-- [ ] **Screenshots** in this README
+- [x] **Screenshots** in this README
 - [ ] **Signed and notarised release** so it can be double-clicked without building
-- [ ] **Duplicate file finder**
+- [x] **Exact duplicate files and inspect-only folder comparison**
+- [x] **Per-app, developer and older-file insights; real scan trends**
 - [ ] **Scheduled rescans** with a quiet notification when a cache grows large
 
 These last items are ideas, not commitments.
@@ -217,3 +227,31 @@ Mac Tidy is released under the [MIT License](LICENSE).
 <p align="center">
   <sub>Made with &nbsp;<sub><img src="https://api.iconify.design/lucide/heart.svg?color=%23299B50" width="14" height="14"></sub>&nbsp; for tidy Macs</sub>
 </p>
+
+
+## Storage insights
+
+| View | What it answers |
+| --- | --- |
+| **Apps** | Measured app bundle + matched Caches, Support, Containers and other Library locations. Shared/ambiguous folders stay unassigned rather than guessed. |
+| **Developer** | Tool-specific explanations and top-level project dependencies. Possible inactivity is based on the latest observed modification, never assumed from access time. Docker disks and release archives stay managed by their owning tools. |
+| **Older Files** | Large local personal files unchanged for 90/180/365/730 days. Modified age is not proof the file is unused. |
+| **Duplicates** | Explicit, cancellable SHA-256 file searches and exact folder-tree comparisons, with a 2/8/32 GB read budget. Choose a keeper before reviewing another file. |
+| **Trends** | Up to 60 real capacity snapshots and changes between comparable complete folders. No fabricated history or “you freed X” attribution from background free-space changes. |
+| **Free Space Explained** | Native macOS capacity estimates, readable Trash size, and local Time Machine snapshot names. Snapshots are not deleted. |
+
+### Duplicate-search scope and limits
+
+The regular scan remains metadata-only. It retains the 1,500 largest files and a separate bounded index of up to 10,000 local personal files of at least 1 MB. **Duplicate search is the explicit exception that reads content**, only when started. It uses size and edge samples, then full SHA-256 hashes; changing files, symlinks, cloud placeholders, dependency trees, hidden paths and app/library packages are excluded. Hard links are counted as one file.
+
+Folder verification checks relative names (including empty folders) and full file hashes among complete size-matched personal-folder candidates. It checks at most 100 groups and 10,000 entries per folder, within the selected read budget. Folder results are inspection-only: the app does not grant a broad whole-folder deletion permission. File duplicate removal revalidates the selected keeper and uses the existing per-item Trash approval flow. APFS clones/shared blocks mean repeated logical content is not guaranteed reclaimable disk space.
+
+The API provides `/api/insights`, `/api/trends`, `/api/space`, and `/api/duplicates`. Starting/cancelling duplicate searches and reviewing duplicate removal are authenticated POST actions. No AI model, account, telemetry or external analysis server is used.
+
+Research notes and implementation limits are in [docs/product-research.md](docs/product-research.md).
+
+## Preview
+
+Exact folder comparison, shown with generated example files (dark appearance follows macOS):
+
+![Mac Tidy exact folder comparison](assets/duplicate-folders.png)

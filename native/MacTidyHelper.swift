@@ -2,6 +2,7 @@
 //
 //   mac-tidy-helper reveal <path>
 //   mac-tidy-helper trash <path> <dev> <inode> <mtime-ns> <size>
+//   mac-tidy-helper space <volume-path>                    (free space, including purgeable)
 //   mac-tidy-helper icon <output.png> [sf-symbol-name]   (development: export UI icons)
 
 import AppKit
@@ -50,6 +51,18 @@ func reveal(_ path: String) throws {
     NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: path)])
 }
 
+/// "Important usage" capacity counts space macOS can purge on demand (iCloud
+/// copies, caches, snapshots), which plain available capacity does not.
+func volumeSpace(_ path: String) throws -> [String: Any] {
+    let keys: Set<URLResourceKey> = [.volumeTotalCapacityKey, .volumeAvailableCapacityKey,
+                                     .volumeAvailableCapacityForImportantUsageKey]
+    let values = try URL(fileURLWithPath: path).resourceValues(forKeys: keys)
+    guard let total = values.volumeTotalCapacity, let free = values.volumeAvailableCapacity,
+          let important = values.volumeAvailableCapacityForImportantUsage
+    else { throw HelperError(message: "Volume capacity unavailable") }
+    return ["ok": true, "total": total, "free": free, "freeIncludingPurgeable": important]
+}
+
 func moveToTrash(_ path: String, expected: [String]) throws -> String {
     let url = URL(fileURLWithPath: path)
     guard url.resolvingSymlinksInPath().path == url.standardizedFileURL.path else {
@@ -75,11 +88,13 @@ do {
     case ("trash", 6):
         let trashPath = try moveToTrash(args[1], expected: Array(args[2...5]))
         respond(["ok": true, "trashPath": trashPath])
+    case ("space", 2):
+        respond(try volumeSpace(args[1]))
     case ("icon", 2), ("icon", 3):
         try exportIcon(to: args[1], symbol: args.count == 3 ? args[2] : "laptopcomputer")
         respond(["ok": true])
     default:
-        throw HelperError(message: "Usage: mac-tidy-helper reveal|trash|icon …")
+        throw HelperError(message: "Usage: mac-tidy-helper reveal|trash|space|icon …")
     }
 } catch {
     respond(["ok": false, "error": error.localizedDescription])

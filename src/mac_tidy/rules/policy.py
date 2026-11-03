@@ -30,8 +30,27 @@ PACKAGE_SUFFIXES = (
 )
 
 
+# Xcode recreates these on the next build or the next time a device connects.
+XCODE_REGENERABLE = (
+    "/Library/Developer/Xcode/DerivedData/",
+    "/Library/Developer/Xcode/iOS DeviceSupport/",
+    "/Library/Developer/Xcode/watchOS DeviceSupport/",
+)
+
+
 def _result(allowed, reason):
     return {"allowed": allowed, "reason": reason}
+
+
+def _is_project_dependencies(parts, item_type):
+    """A project's own top-level node_modules, outside app-owned and hidden folders."""
+    return (
+        item_type == "dir"
+        and parts[-1] == "node_modules"
+        and "node_modules" not in parts[:-1]
+        and parts[0] != "Library"
+        and not any(part.startswith(".") for part in parts)
+    )
 
 
 def _is_eligible_cache(path):
@@ -74,6 +93,10 @@ def action_policy(row, item_type, home=HOME):
         )
 
     text = str(path)
+    if _is_project_dependencies(parts, item_type):
+        return _result(True, "Project dependencies. Reinstall with npm, yarn or pnpm install when you return to the project.")
+    if any(segment in text + "/" for segment in XCODE_REGENERABLE):
+        return _result(True, "Xcode regenerates this on the next build or device connection. Quit Xcode first.")
     kind = classify(text, home)["kind"]
     if kind == "cache" and _is_eligible_cache(text):
         return _result(True, "Rebuildable cache. Stop its app, renders and build jobs first. It may regenerate.")

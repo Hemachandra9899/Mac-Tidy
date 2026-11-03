@@ -59,11 +59,11 @@ export function showDetails({ type, id, item: d }) {
     </div>`);
 }
 
-export function showTrashReview({ item: d }, plan) {
+export function showTrashReview({ item: d, type }, plan) {
   const isCache = d.kind === 'cache';
   const acknowledgement = isCache || d.kind === 'logs'
     ? 'I’ve stopped this app, its builds and any active render jobs.'
-    : 'I’ve reviewed this file and no longer need it here.';
+    : type==='dir' ? 'I’ve reviewed this folder, stopped jobs using it, and understand how to recreate it.' : 'I’ve reviewed this file and no longer need it here.';
 
   show('approval', `
     <div class="mac-alert-icon">${symbol('trash')}</div>
@@ -71,7 +71,7 @@ export function showTrashReview({ item: d }, plan) {
     <p class="alert-message">This item will stay in Trash until you empty it. You can find it again in Activity & Recovery.</p>
     <div class="alert-summary"><span>${isCache ? 'Rebuildable cache' : 'Item size'}</span><b>${formatSize(plan.size)}</b></div>
     <code>${esc(plan.path)}</code>
-    <p class="inline-help trash-advice">${esc(plan.advice)}</p>
+    <p class="inline-help trash-advice">${esc(plan.advice)}</p>${plan.keeper?`<p class="inline-help">Copy to keep:<code>${esc(plan.keeper)}</code>It must still exist and remain unchanged when you approve.</p>`:""}
     <label class="approval-checkbox"><input id="approve-check" type="checkbox"><span>${acknowledgement}</span></label>
     <div class="actions">
       ${actionButton('Show in Finder', 'reveal', { style: 'linkbutton' })}

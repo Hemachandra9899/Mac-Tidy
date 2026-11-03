@@ -11,7 +11,7 @@ import { $, render } from './render.js';
 const POLL_SCANNING_MS = 1800;
 const POLL_IDLE_MS = 12000;
 const POLL_RETRY_MS = 5000;
-const ALWAYS_REFRESHED_VIEWS = ['overview', 'activity'];
+const ALWAYS_REFRESHED_VIEWS = ['overview', 'activity', 'space', 'trends'];
 
 let pollTimer;
 
@@ -19,11 +19,18 @@ export async function refreshCleanup() {
   state.cleanup = await api.get('/api/cleanup');
 }
 
+export async function refreshInsights() {
+  [state.insights,state.trends,state.duplicates,state.space] = await Promise.all([
+    api.get('/api/insights'),api.get('/api/trends'),api.get('/api/duplicates'),api.get('/api/space'),
+  ]);
+}
 async function loadReport() {
   setReport(await api.get('/api/report'));
   await refreshCleanup();
   render();
   $('#scantime').textContent = 'Scanned ' + formatTime(state.report.finished);
+  await refreshInsights();
+  if(!isDialogOpen())render();
 }
 
 function showScanStatus(status) {
@@ -43,10 +50,12 @@ function showScanStatus(status) {
 /** Refresh Trash status and free space; re-render only when it is visible or changed. */
 async function refreshIdle() {
   const before = state.cleanup;
+  const previousDuplicates=JSON.stringify(state.duplicates);
   await refreshCleanup();
+  await refreshInsights();
   const changed = state.cleanup.history.length !== before.history.length
     || state.cleanup.bytesInTrash !== before.bytesInTrash;
-  if (!isDialogOpen() && (changed || ALWAYS_REFRESHED_VIEWS.includes(state.view))) render();
+  if (!isDialogOpen() && (changed || ALWAYS_REFRESHED_VIEWS.includes(state.view) || (state.view==='duplicates'&&previousDuplicates!==JSON.stringify(state.duplicates)))) render();
 }
 
 const hasNewReport = (status) =>
@@ -59,7 +68,7 @@ export async function poll() {
     showScanStatus(status);
     if (hasNewReport(status)) await loadReport();
     else if (status.status === 'complete' && state.report) await refreshIdle();
-    pollTimer = setTimeout(poll, status.status === 'scanning' ? POLL_SCANNING_MS : POLL_IDLE_MS);
+    pollTimer = setTimeout(poll, status.status === 'scanning' || state.duplicates?.status==='running' || state.space?.status==='loading' ? POLL_SCANNING_MS : POLL_IDLE_MS);
   } catch {
     $('#scantime').textContent = 'Connection lost';
     pollTimer = setTimeout(poll, POLL_RETRY_MS);

@@ -23,6 +23,12 @@ export function render() {
 
 /** Re-render only the results, so the search field keeps focus. */
 export function renderResults() {
+  if(['apps','developer','older','duplicates'].includes(state.view)){
+    const input=$('#search'),focused=input===document.activeElement,caret=input?.selectionStart??0;
+    $('#content').innerHTML=VIEWS[state.view].render();
+    if(focused&&$('#search')){$('#search').focus();$('#search').setSelectionRange(caret,caret);}
+    return;
+  }
   if (state.view === 'approvals') {
     const caret = $('#search')?.selectionStart ?? 0;
     $('#content').innerHTML = reviewCleanupView();

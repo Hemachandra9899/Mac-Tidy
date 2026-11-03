@@ -22,6 +22,8 @@ let candidateCache = null;
 
 export function setReport(report) {
   report.files.forEach((file, index) => { file.index = index; });
+  (report.reviewFiles || []).forEach((file,index)=>{file.index=index;});
+  state.duplicateKeepers={};
   state.report = report;
   candidateCache = null;
 }
@@ -38,7 +40,7 @@ export const itemKey = (type, d) => `${type}:${type === 'dir' ? d.id : d.index}`
 export function itemFor(key) {
   const [type, rawId] = key.split(':');
   const id = Number(rawId);
-  const item = type === 'dir' ? dirs()[id] : state.report.files[id];
+  const item = type === 'dir' ? dirs()[id] : type==='review-file' ? (state.report.reviewFiles||[])[id] : state.report.files[id];
   return item ? { type, id, item } : null;
 }
 

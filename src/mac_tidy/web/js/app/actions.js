@@ -7,7 +7,7 @@ import { toast } from '../components/toast.js';
 import { itemFor } from '../core/selectors.js';
 import { skipSuggestion, state } from '../core/state.js';
 import { $, go, render, renderResults } from './render.js';
-import { poll, refreshCleanup } from './sync.js';
+import { poll, refreshCleanup, refreshInsights } from './sync.js';
 
 const MOBILE_WIDTH = 560;
 
@@ -29,6 +29,7 @@ async function approveTrash(_arg, button) {
     closeDialog();
     state.approval = null;
     await refreshCleanup();
+    await refreshInsights();
     render();
     toast(result.item.warning || 'Moved to Trash. Recover it from Activity. Free space changes when Trash is emptied.');
   } catch (error) {
@@ -48,6 +49,19 @@ function exportReport() {
 }
 
 export const ACTIONS = {
+  'find-duplicates': async () => {
+    await api.post('/api/duplicates/find',{mode:state.duplicateMode,budgetBytes:state.duplicateBudget});
+    await refreshInsights();render();poll();
+  },
+  'cancel-duplicates': async () => { await api.post('/api/duplicates/cancel',{});await refreshInsights();render(); },
+  'review-duplicate': async (arg) => {
+    const selection=JSON.parse(arg),result=state.duplicates;
+    const group=result.groups.find(g=>g.id===selection.group),file=group?.files.find(f=>f.index===selection.id);
+    if(!file)throw Error('Duplicate group changed. Search again.');
+    const selected=itemFor(`${file.type||'file'}:${file.index}`);state.selected=selected;
+    state.approval=await api.post('/api/duplicates/preview',selection);
+    showTrashReview(selected,state.approval);
+  },
   go,
   'open-folder': (id) => { state.folder = id === 'root' ? null : Number(id); render(); },
   explore: (id) => { state.folder = Number(id); closeDialog(); go('explorer'); },

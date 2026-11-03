@@ -74,6 +74,10 @@ class Handler(BaseHTTPRequestHandler):
             "/api/status": self.app.status,
             "/api/report": self.app.get_report,
             "/api/cleanup": self.app.cleanup,
+            "/api/insights": self.app.insights,
+            "/api/space": self.app.space,
+            "/api/trends": self.app.trends_summary,
+            "/api/duplicates": self.app.duplicates_status,
             "/api/session": lambda: {"token": self.app.token},
         }
         if route := routes.get(self.route_path):
@@ -88,6 +92,9 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(*rejected)
         routes = {
             "/api/rescan": self.app.rescan,
+            "/api/duplicates/find": self.app.find_duplicates,
+            "/api/duplicates/cancel": self.app.cancel_duplicates,
+            "/api/duplicates/preview": self.app.preview_duplicate,
             "/api/reveal": self.app.reveal_item,
             "/api/trash/preview": self.app.preview_trash,
             "/api/trash/approve": self.app.approve_trash,

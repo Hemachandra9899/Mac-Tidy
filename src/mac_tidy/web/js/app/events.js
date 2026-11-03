@@ -35,7 +35,12 @@ function onInput(event) {
 }
 
 function onChange(event) {
-  if (event.target.id === 'approve-check') {
+  if (event.target.id === 'old-days') { state.oldDays=Number(event.target.value);renderResults();
+  } else if(event.target.id==='stale-only'){state.staleOnly=event.target.checked;renderResults();
+  } else if(event.target.id==='duplicate-mode'){state.duplicateMode=event.target.value;
+  } else if(event.target.id==='duplicate-budget'){state.duplicateBudget=Number(event.target.value);
+  } else if(event.target.dataset.keeperGroup){state.duplicateKeepers[event.target.dataset.keeperGroup]=Number(event.target.value);renderResults();
+  } else if (event.target.id === 'approve-check') {
     $('#approve-trash').disabled = !event.target.checked;
   } else if (event.target.id === 'filter') {
     state.filter = event.target.value;

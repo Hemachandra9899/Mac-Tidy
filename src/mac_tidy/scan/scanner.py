@@ -12,9 +12,12 @@ import shutil
 import time
 
 from ..config import HOME
+from ..common.paths import personal_path, local_regular
 
 ROOTS = [HOME, "/Users/Shared", "/Applications", "/Library", "/private/var", "/opt", "/usr/local"]
 MAX_LARGEST_FILES = 1500
+MAX_REVIEW_FILES = 10000
+MIN_REVIEW_BYTES = 1_000_000
 MAX_ERRORS = 1000
 PROGRESS_INTERVAL_SECONDS = 1
 SNAPSHOT_NOTE = (
@@ -32,6 +35,8 @@ class _Scan:
         self.progress = progress
         self.dirs = []
         self.files = []  # min-heap of (size, sequence, row)
+        self.review_files = []
+        self.review_count = 0
         self.seen_links = set()
         self.errors = []
         self.error_count = 0
@@ -59,7 +64,14 @@ class _Scan:
             "size": size,
             "logical": st.st_size,
             "mtime": st.st_mtime,
+            "mtimeNs": st.st_mtime_ns,
+            "device": st.st_dev, "inode": st.st_ino,
         }
+        if size >= MIN_REVIEW_BYTES and personal_path(entry.path, HOME) and local_regular(st):
+            self.review_count += 1
+            review = (size, self.file_count, dict(row))
+            if len(self.review_files) < MAX_REVIEW_FILES:heapq.heappush(self.review_files, review)
+            elif size > self.review_files[0][0]:heapq.heapreplace(self.review_files, review)
         item = (size, self.file_count, row)
         if len(self.files) < MAX_LARGEST_FILES:
             heapq.heappush(self.files, item)
@@ -87,6 +99,7 @@ class _Scan:
             "size": 0,
             "partial": False,
             "mtime": st.st_mtime,
+            "latestMtime": st.st_mtime, "logical": 0,
         }
         self.dirs.append(row)
         subdirs = []
@@ -103,6 +116,8 @@ class _Scan:
                             subdirs.append(entry.path)
                         elif entry.is_file(follow_symlinks=False):
                             row["size"] += self.add_file(entry, est, row["id"])
+                            row["logical"] += est.st_size
+                            row["latestMtime"] = max(row["latestMtime"], est.st_mtime)
                     except OSError as ex:
                         row["partial"] = True
                         self.error(entry.path, ex)
@@ -133,6 +148,8 @@ class _Scan:
             stack.pop()
             if stack:
                 stack[-1][0]["size"] += row["size"]
+                stack[-1][0]["logical"] += row["logical"]
+                stack[-1][0]["latestMtime"] = max(stack[-1][0]["latestMtime"], row["latestMtime"])
             self.report_progress(row["path"])
 
     def report_progress(self, current):
@@ -176,6 +193,9 @@ def scan_tree(roots, progress=None):
         "roots": root_rows,
         "dirs": scan.dirs,
         "files": [item[2] for item in sorted(scan.files, reverse=True)],
+        "reviewFiles": [item[2] for item in sorted(scan.review_files, reverse=True)],
+        "reviewFilesEligible": scan.review_count,
+        "reviewFilesLimit": MAX_REVIEW_FILES,
         "filesScanned": scan.file_count,
         "dirsScanned": len(scan.dirs),
         "errors": scan.errors,

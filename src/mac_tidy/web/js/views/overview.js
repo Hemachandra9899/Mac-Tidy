@@ -93,5 +93,6 @@ export function overviewView() {
       subtitle: 'These can contain valuable media, virtual machines and persistent data.',
       bodyHtml: folderRows(managedAppData(), empty('Use Browse Storage to review other large folders.')),
     })}
+    ${card({title:'Understand What to Review',subtitle:'Explore measured evidence before choosing cleanup.',bodyHtml:`<div class="insight-links">${linkTo('Apps →','apps')}${linkTo('Developer storage →','developer')}${linkTo('Older files →','older')}${linkTo('Exact duplicates →','duplicates')}${linkTo('Storage trends →','trends')}${linkTo('Why space differs →','space')}</div>`})}
     ${coverageNote()}`;
 }

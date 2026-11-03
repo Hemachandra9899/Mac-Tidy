@@ -12,6 +12,15 @@ function loadSkipped() {
 
 export const state = {
   report: null,
+  insights: null,
+  trends: null,
+  space: null,
+  duplicates: {status:"idle",groups:[]},
+  duplicateMode: "files",
+  duplicateBudget: 2_000_000_000,
+  duplicateKeepers: {},
+  oldDays: 365,
+  staleOnly: false,
   cleanup: { cards: [], history: [] },
   view: 'overview',
   folder: null,

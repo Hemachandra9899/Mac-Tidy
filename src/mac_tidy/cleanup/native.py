@@ -5,7 +5,7 @@ import subprocess
 
 from ..config import HELPER_PATH
 
-TIMEOUTS = {"trash": 120, "reveal": 20}
+TIMEOUTS = {"trash": 120, "reveal": 20, "space": 10}
 
 
 def _run(operation, *args):
@@ -39,3 +39,9 @@ def move_to_trash(path, fingerprint):
 def reveal(path):
     """Select ``path`` in a Finder window."""
     _run("reveal", path)
+
+
+def volume_space(path):
+    """``{'total', 'free', 'freeIncludingPurgeable'}`` in bytes for the volume holding ``path``."""
+    data = _run("space", path)
+    return {key: data[key] for key in ("total", "free", "freeIncludingPurgeable")}
