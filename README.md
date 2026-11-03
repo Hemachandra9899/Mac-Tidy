@@ -249,9 +249,3 @@ Folder verification checks relative names (including empty folders) and full fil
 The API provides `/api/insights`, `/api/trends`, `/api/space`, and `/api/duplicates`. Starting/cancelling duplicate searches and reviewing duplicate removal are authenticated POST actions. No AI model, account, telemetry or external analysis server is used.
 
 Research notes and implementation limits are in [docs/product-research.md](docs/product-research.md).
-
-## Preview
-
-Exact folder comparison, shown with generated example files (dark appearance follows macOS):
-
-![Mac Tidy exact folder comparison](assets/duplicate-folders.png)

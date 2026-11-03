@@ -15,5 +15,13 @@ tests/
 # Local notes and archived material
 .archive/
 
+# Screenshots and screen recordings are not kept in the repository
+screenshots/
+assets/screenshot*
+assets/*-screenshot*
+assets/duplicate-folders.png
+*.mov
+*.mp4
+
 # macOS
 .DS_Store
