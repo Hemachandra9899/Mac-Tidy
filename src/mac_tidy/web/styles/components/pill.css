@@ -1,0 +1,27 @@
+/* Category pills. */
+
+.pill {
+  font-size: 10px;
+  background: var(--fill);
+  color: var(--secondary);
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 7px;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.pill.cache {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.pill.system {
+  color: var(--secondary);
+}
+
+.pill.downloads, .pill.developer, .pill.backup {
+  background: #fff2d8;
+  color: #936000;
+}

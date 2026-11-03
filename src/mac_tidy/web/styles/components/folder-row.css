@@ -1,0 +1,118 @@
+/* Folder rows and numbered steps. */
+
+.folderrow {
+  display: grid;
+  grid-template-columns: 31px minmax(0,1fr) 78px 13px;
+  gap: 9px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.folderrow:hover {
+  background: color-mix(in srgb,var(--fill) 50%,transparent);
+}
+
+.foldericon {
+  width: 28px;
+  height: 28px;
+  background: var(--accent-soft);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+}
+
+.foldericon .sf {
+  width: 24px;
+  height: 24px;
+}
+
+.rowname {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.rowname b {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.rowname small {
+  display: block;
+  font-size: 10px;
+  color: var(--secondary);
+  margin-top: 3px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.rowsize {
+  font-size: 12px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tinybar {
+  height: 3px;
+  background: var(--fill);
+  border-radius: 3px;
+  margin-top: 7px;
+  overflow: hidden;
+}
+
+.tinybar span {
+  display: block;
+  background: color-mix(in srgb,var(--accent) 65%,transparent);
+  height: 100%;
+  border-radius: 3px;
+}
+
+.arrow {
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+}
+
+.arrow .sf {
+  width: 15px;
+  height: 15px;
+}
+
+.step {
+  display: flex;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding: 13px 0;
+}
+
+.stepnum {
+  font-size: 11px;
+  border-radius: 50%;
+  background: var(--fill);
+  color: var(--secondary);
+  width: 23px;
+  height: 23px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+
+.step b {
+  font-size: 12px;
+  font-weight: 550;
+}
+
+.step p {
+  font-size: 11px;
+  color: var(--secondary);
+  margin: 4px 0 0;
+}

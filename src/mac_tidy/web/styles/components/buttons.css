@@ -1,0 +1,101 @@
+/* Push, primary, destructive, icon and link buttons. */
+
+.button {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 5px 12px;
+  min-height: 29px;
+  box-shadow: 0 1px 1px #00000008;
+  background: linear-gradient(var(--button-top),var(--button-bottom));
+  font-size: 12px;
+  font-weight: 400;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(.975);
+}
+
+.button:active:not(:disabled) {
+  filter: brightness(.93);
+}
+
+.button .sf {
+  width: 17px;
+  height: 17px;
+}
+
+.button.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+  font-weight: 500;
+}
+
+.button.primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.button.danger {
+  background: var(--red-fill);
+  border-color: transparent;
+  color: var(--red);
+  font-weight: 500;
+}
+
+.iconbutton {
+  border: 0;
+  background: none;
+  padding: 4px;
+  line-height: 0;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 6px;
+  color: var(--secondary);
+}
+
+.iconbutton:hover {
+  background: var(--fill);
+}
+
+.iconbutton .sf {
+  width: 22px;
+  height: 22px;
+}
+
+.linkbutton {
+  border: 0;
+  background: none;
+  padding: 3px;
+  color: var(--accent);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.linkbutton:hover {
+  text-decoration: underline;
+}
+
+/* A row of buttons, used in dialogs and cards. */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 21px;
+}
+
+.actions .button {
+  padding: 6px 13px;
+}
+
+.actions.stacked {
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 0;
+}

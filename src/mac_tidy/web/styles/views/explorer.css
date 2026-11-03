@@ -1,0 +1,64 @@
+/* Browse Storage view. */
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.breadcrumbs button {
+  font-size: 11px;
+  border: 0;
+  border-radius: 5px;
+  background: var(--fill);
+  padding: 5px 8px;
+  color: var(--accent);
+}
+
+.treemap {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  min-height: 130px;
+}
+
+.tile {
+  border: 0;
+  padding: 15px;
+  border-radius: 7px;
+  min-width: 100px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  text-align: left;
+  color: #153b23;
+}
+
+.tile:hover {
+  filter: brightness(.96);
+}
+
+.tile b {
+  font-size: 12px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.tile strong {
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -.5px;
+  margin-top: 13px;
+  display: inline-block;
+}
+
+.tile small {
+  font-size: 10px;
+  opacity: .75;
+}

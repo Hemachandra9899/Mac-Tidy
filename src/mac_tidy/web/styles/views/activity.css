@@ -1,0 +1,27 @@
+/* Activity & Recovery view. */
+
+.activity-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  padding: 16px 0;
+}
+
+.activity-row .rowname {
+  flex: 1;
+}
+
+.activity-check {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 50%;
+}
+
+.activity-row .rowname small {
+  line-height: 1.6;
+}

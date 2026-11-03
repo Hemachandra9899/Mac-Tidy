@@ -1,0 +1,98 @@
+/* Cleanup hero, status line, disk usage bar and legend. */
+
+.hero-cleanup {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.hero-cleanup>div {
+  min-width: 0;
+}
+
+.hero-cleanup h2 {
+  font-size: 20px;
+  letter-spacing: -.4px;
+  font-weight: 600;
+  margin: 9px 0 7px;
+}
+
+.hero-cleanup p {
+  font-size: 12px;
+  color: var(--secondary);
+  margin-bottom: 11px;
+  max-width: 620px;
+}
+
+.hero-cleanup code {
+  font-size: 10px;
+  color: var(--secondary);
+  overflow-wrap: anywhere;
+}
+
+.hero-cleanup .button {
+  flex-shrink: 0;
+}
+
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-line .sf {
+  width: 18px;
+  height: 18px;
+}
+
+.diskbar {
+  height: 19px;
+  display: flex;
+  overflow: hidden;
+  border-radius: 5px;
+  background: var(--fill);
+}
+
+.diskbar span {
+  height: 100%;
+  min-width: 1px;
+}
+
+.legend {
+  display: flex;
+  gap: 12px 20px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  font-size: 11px;
+  color: var(--secondary);
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend b {
+  font-weight: 500;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  display: inline-block;
+  flex-shrink: 0;
+}

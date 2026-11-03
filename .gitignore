@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Compiled native helper (build with `make helper`)
+src/mac_tidy/bin/
+
+# Tests are kept local and not published
+tests/
+
+# Local notes and archived material
+.archive/
+
+# macOS
+.DS_Store

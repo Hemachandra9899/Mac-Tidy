@@ -1,0 +1,171 @@
+/* Details dialog and the Move to Trash alert. */
+
+dialog {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 18px;
+  box-shadow: 0 25px 80px #00000038,0 1px 8px #00000012;
+  width: calc(100% - 36px);
+  max-width: 520px;
+  padding: 24px;
+  max-height: calc(100vh - 36px);
+  overflow-y: auto;
+}
+
+dialog::backdrop {
+  background: rgba(0,0,0,.22);
+  backdrop-filter: blur(3px);
+}
+
+.dialog-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+dialog h2 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -.4px;
+  overflow-wrap: anywhere;
+  margin-bottom: 12px;
+}
+
+dialog p {
+  font-size: 12px;
+  color: var(--secondary);
+}
+
+dialog code {
+  display: block;
+  background: var(--fill);
+  padding: 11px 13px;
+  border-radius: 7px;
+  font-size: 11px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+dialog .bigsize {
+  font-size: 32px;
+  letter-spacing: -.7px;
+  font-weight: 500;
+  margin: 15px 0;
+}
+
+.detailmeta {
+  font-size: 11px;
+  color: var(--secondary);
+  line-height: 1.7;
+  margin: 12px 0 16px;
+}
+
+.approval-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 18px 0 0;
+  text-align: left;
+}
+
+.approval-checkbox input {
+  accent-color: var(--accent);
+  min-height: 0;
+  min-width: 0;
+  flex: none;
+  margin: 2px 0 0;
+  width: 14px;
+  height: 14px;
+}
+
+.mac-alert-icon {
+  display: grid;
+  place-items: center;
+  margin: 0 auto 15px;
+  color: var(--accent);
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+}
+
+.mac-alert-icon .sf {
+  width: 43px;
+  height: 43px;
+}
+
+dialog[data-mode=approval] {
+  max-width: 432px;
+  padding: 27px 25px 22px;
+  text-align: center;
+}
+
+dialog[data-mode=approval] .dialog-top {
+  display: none;
+}
+
+dialog[data-mode=approval] h2 {
+  font-size: 17px;
+  margin-bottom: 10px;
+  letter-spacing: -.2px;
+}
+
+dialog[data-mode=approval] .alert-message {
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  color: var(--secondary);
+}
+
+dialog[data-mode=approval] .alert-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 11px 0;
+  font-size: 12px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+
+dialog[data-mode=approval] .alert-summary b {
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
+}
+
+dialog[data-mode=approval] code {
+  text-align: left;
+  font-size: 10px;
+  padding: 10px 12px;
+}
+
+dialog[data-mode=approval] .actions {
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+dialog[data-mode=approval] .actions .linkbutton {
+  margin-right: auto;
+  font-size: 11px;
+}
+
+dialog[data-mode=approval] .maphint {
+  font-size: 10px;
+  margin-top: 13px;
+}
+
+.inline-help {
+  font-size: 11px;
+  color: var(--secondary);
+  line-height: 1.6;
+}
+
+dialog[data-mode=approval] .trash-advice {
+  text-align: left;
+  margin-top: 13px;
+}

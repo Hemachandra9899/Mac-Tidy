@@ -1,0 +1,63 @@
+/* Metric tiles. */
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.metric {
+  padding: 17px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  min-width: 0;
+  box-shadow: var(--shadow);
+}
+
+.metric.highlight {
+  border-color: color-mix(in srgb,var(--accent) 25%,var(--line));
+  background: var(--surface);
+}
+
+.metric-label {
+  font-size: 11px;
+  color: var(--secondary);
+  text-transform: none;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.metric-label>span {
+  display: none;
+}
+
+.metric strong {
+  font-weight: 550;
+  font-size: 29px;
+  letter-spacing: -.9px;
+  display: block;
+  margin: 9px 0 5px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric.highlight strong {
+  color: var(--accent);
+}
+
+.metric strong small {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-left: 4px;
+  color: var(--secondary);
+}
+
+.metric>small {
+  font-size: 10px;
+  color: var(--secondary);
+  line-height: 1.5;
+  display: block;
+}

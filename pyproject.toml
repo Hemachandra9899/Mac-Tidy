@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mac-tidy"
+dynamic = ["version"]
+description = "A local, review-first storage cleaner for macOS."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = []
+classifiers = [
+    "Environment :: MacOS X",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+]
+
+[project.scripts]
+mac-tidy = "mac_tidy.cli:main"
+
+[tool.setuptools.dynamic]
+version = { attr = "mac_tidy.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+mac_tidy = ["web/**/*", "bin/*"]

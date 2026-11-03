@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Understand your Mac's storage and approve cleanup, one item at a time.">
+  <title>Mac Tidy — Storage for your Mac</title>
+  <link rel="icon" href="/icons/externaldrive.badge.checkmark.png">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+  <aside id="sidebar">
+    <a class="brand" href="#overview">
+      <span class="app-icon"><span class="sf" style="--symbol:url('/icons/externaldrive.badge.checkmark.png')"></span></span>
+      <span>Mac Tidy<small>Storage for your Mac</small></span>
+    </a>
+    <div class="machine">
+      <span class="sf device" style="--symbol:url('/icons/laptopcomputer.png')"></span>
+      <div><b>This Mac</b><small>Macintosh HD</small></div>
+    </div>
+
+    <div class="navlabel">Storage</div>
+    <nav aria-label="Storage navigation">
+      <button data-action="go" data-arg="overview" class="active"><span class="sf" style="--symbol:url('/icons/chart.pie.png')"></span>Overview</button>
+      <button data-action="go" data-arg="approvals"><span class="sf" style="--symbol:url('/icons/checklist.png')"></span>Review Cleanup<em id="approve-count">—</em></button>
+      <button data-action="go" data-arg="explorer"><span class="sf" style="--symbol:url('/icons/folder.png')"></span>Browse Storage</button>
+      <button data-action="go" data-arg="files"><span class="sf" style="--symbol:url('/icons/doc.png')"></span>Large Files</button>
+      <button data-action="go" data-arg="cleanup"><span class="sf" style="--symbol:url('/icons/shippingbox.png')"></span>All Candidates<em id="navcount">—</em></button>
+      <div class="navlabel">Insights</div>
+      <button data-action="go" data-arg="activity"><span class="sf" style="--symbol:url('/icons/clock.arrow.circlepath.png')"></span>Activity & Recovery<em id="activity-count">0</em></button>
+      <button data-action="go" data-arg="coverage"><span class="sf" style="--symbol:url('/icons/info.circle.png')"></span>Scan Details</button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <span class="green-dot"></span> On this Mac
+      <p>Your files stay on your Mac.<br>Only approved items move to Trash.</p>
+      <a href="https://support.apple.com/en-us/102624" target="_blank" rel="noreferrer">Mac storage help <span aria-hidden="true">↗</span></a>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <div class="toolbar-location">
+        <button class="iconbutton" data-action="toggle-sidebar" title="Show or hide sidebar" aria-label="Show or hide sidebar"><span class="sf" style="--symbol:url('/icons/sidebar.left.png')"></span></button>
+        <span id="pagecrumb">Overview</span>
+      </div>
+      <div class="header-actions">
+        <span id="scantime">Connecting…</span>
+        <button class="button" id="rescan" data-action="rescan"><span class="sf" style="--symbol:url('/icons/arrow.clockwise.png')"></span>Rescan</button>
+      </div>
+    </header>
+
+    <div class="main-content">
+      <div id="progress" class="progress" role="status">
+        <span class="spinner"></span>
+        <div><b>Scanning storage…</b><small id="progresstext">Reading file sizes. Your files aren’t opened.</small></div>
+      </div>
+      <section class="title">
+        <h1 id="pagetitle">Storage</h1>
+        <p id="pagesubtitle">Understand what’s on your Mac. Choose what to remove.</p>
+      </section>
+      <div id="content"><div class="loading-card"><span class="spinner"></span>Loading your storage report…</div></div>
+      <footer><span>Mac Tidy</span><span>Local storage · Sizes in decimal GB</span></footer>
+    </div>
+  </main>
+
+  <dialog id="details" aria-labelledby="detail-title">
+    <div class="dialog-top">
+      <span class="eyebrow">Item Information</span>
+      <button class="iconbutton" data-action="close-dialog" aria-label="Close details"><span class="sf" style="--symbol:url('/icons/xmark.png')"></span></button>
+    </div>
+    <div id="detailcontent"></div>
+  </dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

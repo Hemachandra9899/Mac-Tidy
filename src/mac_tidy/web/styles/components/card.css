@@ -1,0 +1,93 @@
+/* Cards, notices, hints and empty states. */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 19px;
+}
+
+.card-head h2, h2 {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -.15px;
+  margin-bottom: 4px;
+}
+
+.card-head p {
+  font-size: 12px;
+  color: var(--secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.maphint {
+  color: var(--secondary);
+  font-size: 11px;
+  line-height: 1.55;
+  margin: 14px 0 0;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+}
+
+.notice {
+  font-size: 12px;
+  color: var(--secondary);
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 12px 15px;
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.notice.info {
+  background: var(--fill);
+  border-color: transparent;
+}
+
+.notice .linkbutton {
+  font-size: 11px;
+}
+
+.empty {
+  text-align: center;
+  padding: 24px;
+  font-size: 12px;
+  color: var(--secondary);
+}
+
+.loading-card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 35px;
+  margin-bottom: 22px;
+  color: var(--secondary);
+}
+
+.section-title {
+  margin-top: 25px;
+}
+
+.wrap-anywhere {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

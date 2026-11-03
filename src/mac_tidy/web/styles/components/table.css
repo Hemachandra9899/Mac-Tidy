@@ -1,0 +1,79 @@
+/* Data table. */
+
+.tablewrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--secondary);
+  border-bottom: 1px solid var(--line);
+  padding: 9px 8px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+td {
+  font-size: 12px;
+  border-bottom: 1px solid var(--line);
+  padding: 11px 8px;
+}
+
+tbody tr:nth-child(even) {
+  background: color-mix(in srgb,var(--fill) 45%,transparent);
+}
+
+td b {
+  display: block;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td small {
+  display: block;
+  font-size: 10px;
+  color: var(--secondary);
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table-action {
+  font-size: 11px;
+  padding: 3px 9px;
+  background: linear-gradient(var(--button-top),var(--button-bottom));
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--accent);
+}
+
+.col-name {
+  width: 51%;
+}
+
+.col-size {
+  width: 14%;
+}
+
+.col-guidance {
+  width: 22%;
+}
+
+.col-action {
+  width: 13%;
+}
+
+.toolbar.table-pager {
+  margin: 18px 0 0;
+}

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 400" width="860" height="400" role="img" aria-labelledby="t d" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif">
+  <title id="t">Mac Tidy architecture</title>
+  <desc id="d">The browser talks to a local Python server. The server uses the scan, rules and cleanup layers, and a Swift helper that moves items to the macOS Trash.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#6f8d7d"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="860" height="400" rx="14" fill="#f4f8f5"/>
+
+  <!-- Browser -->
+  <rect x="30" y="150" width="150" height="100" rx="12" fill="#ffffff" stroke="#299b50" stroke-width="2"/>
+  <text x="105" y="190" text-anchor="middle" font-size="16" font-weight="600" fill="#1d1d1f">Dashboard</text>
+  <text x="105" y="212" text-anchor="middle" font-size="12" fill="#4a4a4f">ES modules + CSS</text>
+  <text x="105" y="230" text-anchor="middle" font-size="12" fill="#4a4a4f">in your browser</text>
+
+  <!-- Server -->
+  <rect x="250" y="60" width="270" height="280" rx="14" fill="#ffffff" stroke="#299b50" stroke-width="2"/>
+  <text x="385" y="92" text-anchor="middle" font-size="16" font-weight="600" fill="#1d1d1f">Local Python server</text>
+  <text x="385" y="112" text-anchor="middle" font-size="12" fill="#4a4a4f">127.0.0.1:8765 · standard library only</text>
+
+  <rect x="275" y="132" width="220" height="40" rx="8" fill="#e5f3e8"/>
+  <text x="385" y="157" text-anchor="middle" font-size="13" fill="#1d1d1f"><tspan font-weight="600">scan/</tspan> metadata-only scan</text>
+  <rect x="275" y="182" width="220" height="40" rx="8" fill="#e5f3e8"/>
+  <text x="385" y="207" text-anchor="middle" font-size="13" fill="#1d1d1f"><tspan font-weight="600">rules/</tspan> classify + allowlist</text>
+  <rect x="275" y="232" width="220" height="40" rx="8" fill="#e5f3e8"/>
+  <text x="385" y="257" text-anchor="middle" font-size="13" fill="#1d1d1f"><tspan font-weight="600">cleanup/</tspan> approvals + activity</text>
+  <rect x="275" y="282" width="220" height="40" rx="8" fill="#e5f3e8"/>
+  <text x="385" y="307" text-anchor="middle" font-size="13" fill="#1d1d1f"><tspan font-weight="600">server/</tspan> API + security checks</text>
+
+  <!-- Swift helper -->
+  <rect x="590" y="90" width="240" height="90" rx="12" fill="#ffffff" stroke="#299b50" stroke-width="2"/>
+  <text x="710" y="124" text-anchor="middle" font-size="16" font-weight="600" fill="#1d1d1f">Swift helper</text>
+  <text x="710" y="146" text-anchor="middle" font-size="12" fill="#4a4a4f">re-verifies the item, then calls</text>
+  <text x="710" y="162" text-anchor="middle" font-size="12" fill="#4a4a4f">FileManager.trashItem</text>
+
+  <!-- macOS -->
+  <rect x="590" y="240" width="240" height="90" rx="12" fill="#ffffff" stroke="#6f8d7d" stroke-width="2"/>
+  <text x="710" y="274" text-anchor="middle" font-size="16" font-weight="600" fill="#1d1d1f">macOS</text>
+  <text x="710" y="296" text-anchor="middle" font-size="12" fill="#4a4a4f">your files and the Trash</text>
+  <text x="710" y="312" text-anchor="middle" font-size="12" fill="#4a4a4f">Finder “Put Back” recovers</text>
+
+  <!-- Arrows -->
+  <path d="M180 200H248" stroke="#6f8d7d" stroke-width="2" fill="none" marker-end="url(#a)" marker-start="url(#a)"/>
+  <text x="214" y="190" text-anchor="middle" font-size="11" fill="#4a4a4f">JSON</text>
+  <path d="M520 135H588" stroke="#6f8d7d" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <text x="554" y="125" text-anchor="middle" font-size="11" fill="#4a4a4f">approved</text>
+  <path d="M710 180V238" stroke="#6f8d7d" stroke-width="2" fill="none" marker-end="url(#a)"/>
+  <text x="772" y="214" text-anchor="middle" font-size="11" fill="#4a4a4f">to Trash</text>
+  <path d="M520 285C555 285 555 285 588 285" stroke="#6f8d7d" stroke-width="2" stroke-dasharray="5 4" fill="none" marker-end="url(#a)"/>
+  <text x="554" y="275" text-anchor="middle" font-size="11" fill="#4a4a4f">read-only</text>
+  <text x="554" y="302" text-anchor="middle" font-size="11" fill="#4a4a4f">scan</text>
+</svg>

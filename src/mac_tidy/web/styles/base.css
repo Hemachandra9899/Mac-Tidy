@@ -1,0 +1,91 @@
+/* Design tokens, reset, typography and SF Symbol masks. */
+
+:root {
+  color-scheme: light dark;
+  --accent: #008932;
+  --accent-hover: #06742e;
+  --accent-soft: #e5f3e8;
+  --green: #008932;
+  --ink: #1d1d1f;
+  --secondary: #6e6e73;
+  --muted: #86868b;
+  --paper: #f5f5f7;
+  --surface: #fff;
+  --sidebar: rgba(237,237,239,.9);
+  --line: rgba(60,60,67,.13);
+  --fill: #f0f0f2;
+  --button-top: #fff;
+  --button-bottom: #f5f5f5;
+  --red: #d70015;
+  --red-fill: #ffebec;
+  --focus: rgba(52,199,89,.35);
+  --shadow: 0 1px 3px rgba(0,0,0,.05);
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 13px/1.45 -apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select {
+  font: inherit;
+  color: inherit;
+}
+
+button, a, input, select {
+  outline-offset: 3px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--focus);
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: .4;
+}
+
+p {
+  line-height: 1.55;
+}
+
+h1, h2, h3, p {
+  margin-top: 0;
+}
+
+.sf {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  background: currentColor;
+  mask-image: var(--symbol);
+  mask-size: contain;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: var(--symbol);
+  -webkit-mask-size: contain;
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  vertical-align: middle;
+}
