@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/mac-icon.png" width="96" alt="Mac Tidy" />
+  <img src="assets/app-icon.png" width="128" alt="Mac Tidy" />
 </p>
 
 # Mac Tidy

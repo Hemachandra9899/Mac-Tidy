@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 HOST = "127.0.0.1"
-PORT = 8765
+PORT = int(os.environ.get("MAC_TIDY_PORT", 8765))
 URL = f"http://{HOST}:{PORT}"
 ALLOWED_HOSTS = frozenset({f"127.0.0.1:{PORT}", f"localhost:{PORT}"})
 ALLOWED_ORIGINS = frozenset(f"http://{host}" for host in ALLOWED_HOSTS)
