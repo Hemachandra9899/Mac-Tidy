@@ -141,6 +141,8 @@ make run
 
 `make run` builds the helper on first use, starts the server and opens <http://127.0.0.1:8765>. Press Control-C to stop. You can also double-click **Start Mac Tidy.command**.
 
+If port 8765 is already in use (for example by another copy of Mac Tidy), the message names the process and how to stop it. Or run this copy on another port: `MAC_TIDY_PORT=8766 make run`.
+
 If port 8765 is busy, choose another local port:
 
 ```sh

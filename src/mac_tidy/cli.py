@@ -21,6 +21,19 @@ def running_instance():
         return None
 
 
+def other_copy_message(other):
+    """Explain that a Mac Tidy from another folder holds the port, and what to do."""
+    location = other.get("projectPath", "another folder")
+    pid = other.get("pid")
+    stop = f"press Control-C in its Terminal window, or run `kill {pid}`" if pid else "stop it first"
+    return (
+        f"Another Mac Tidy is already running on port {PORT}:\n"
+        f"  {location} (pid {pid})\n"
+        f"Stop it ({stop}), or run this copy on a different port:\n"
+        f"  MAC_TIDY_PORT={PORT + 1} make run"
+    )
+
+
 def open_dashboard():
     subprocess.run(["/usr/bin/open", URL + "/#overview"], check=False)
 
@@ -46,7 +59,7 @@ def main(argv=None):
 
     if status:
         if status.get("projectPath") != str(PACKAGE_DIR):
-            sys.exit(f"Another Mac Tidy copy is using port {PORT}. Stop it first, then try again.")
+            sys.exit(other_copy_message(status))
         print("Mac Tidy is already running.")
         if not args.no_open:
             open_dashboard()
